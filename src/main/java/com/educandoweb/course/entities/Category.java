@@ -1,11 +1,15 @@
 package com.educandoweb.course.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "tb_category")
@@ -16,8 +20,8 @@ public class Category {
   private Long id;
   private String name;
 
-  // @ManyToMany
-  // private Product product;
+  @Transient
+  private Set<Product> products = new HashSet<>();
 
   public Category(Long id, String name) {
     this.id = id;
@@ -41,6 +45,10 @@ public class Category {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Set<Product> getProducts() {
+    return products;
   }
 
   @Override
