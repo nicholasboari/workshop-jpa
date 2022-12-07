@@ -37,7 +37,7 @@ public class Order {
   public Order(Long id, Instant momoment, OrderStatus orderStatus, User client) {
     this.id = id;
     this.momoment = momoment;
-    this.orderStatus = orderStatus.getCode();
+    setOrderStatus(orderStatus);
     this.client = client;
   }
 
