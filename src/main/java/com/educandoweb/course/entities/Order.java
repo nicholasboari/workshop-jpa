@@ -2,9 +2,9 @@ package com.educandoweb.course.entities;
 
 import java.time.Instant;
 
+import com.educandoweb.course.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +25,8 @@ public class Order {
   @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ", timezone = "GMT")
   private Instant momoment;
 
+  private Integer orderStatus;
+
   @ManyToOne
   @JoinColumn(name = "client_id")
   private User client;
@@ -32,9 +34,10 @@ public class Order {
   public Order() {
   }
 
-  public Order(Long id, Instant momoment, User client) {
+  public Order(Long id, Instant momoment, OrderStatus orderStatus, User client) {
     this.id = id;
     this.momoment = momoment;
+    this.orderStatus = orderStatus.getCode();
     this.client = client;
   }
 
@@ -60,6 +63,16 @@ public class Order {
 
   public void setClient(User client) {
     this.client = client;
+  }
+
+  public OrderStatus getOrderStatus() {
+    return OrderStatus.valueOf(orderStatus);
+  }
+
+  public void setOrderStatus(OrderStatus orderStatus) {
+    if (orderStatus != null) {
+      this.orderStatus = orderStatus.getCode();
+    }
   }
 
 }
