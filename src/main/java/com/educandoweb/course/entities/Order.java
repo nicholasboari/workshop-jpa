@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.educandoweb.course.entities.enums.OrderStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -27,9 +24,7 @@ public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ", timezone = "GMT")
-  private Instant momoment;
+  private Instant moment;
 
   private Integer orderStatus;
 
@@ -37,22 +32,20 @@ public class Order {
   @JoinColumn(name = "client_id")
   private User client;
 
-  @JsonIgnore
   @OneToMany(mappedBy = "id.order")
   private Set<OrderItem> items = new HashSet<>();
 
-  @JsonIgnore
   @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
   private Payment payment;
 
   public Order() {
   }
 
-  public Order(Long id, Instant momoment, OrderStatus orderStatus, User client) {
+  public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
     this.id = id;
-    this.momoment = momoment;
-    setOrderStatus(orderStatus);
+    this.moment = moment;
     this.client = client;
+    setOrderStatus(orderStatus);
   }
 
   public Long getId() {
@@ -63,12 +56,12 @@ public class Order {
     this.id = id;
   }
 
-  public Instant getMomoment() {
-    return momoment;
+  public Instant getMoment() {
+    return moment;
   }
 
-  public void setMomoment(Instant momoment) {
-    this.momoment = momoment;
+  public void setMoment(Instant moment) {
+    this.moment = moment;
   }
 
   public User getClient() {
@@ -101,6 +94,14 @@ public class Order {
     return items;
   }
 
+  public Double getTotal() {
+    double sum = 0.0;
+    for (OrderItem x : items) {
+      sum += x.getSubTotal();
+    }
+    return sum;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -125,5 +126,4 @@ public class Order {
       return false;
     return true;
   }
-
 }
